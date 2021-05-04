@@ -1,0 +1,31 @@
+{
+  "name": "seepoints",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "debug": "webpack-dev-server --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZhujinLi/SeePoints.git"
+  },
+  "author": "zjli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZhujinLi/SeePoints/issues"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "eslint": "^7.25.0",
+    "html-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.1.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4",
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {}
+}
