@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "debug": "webpack-dev-server --open",
+    "debug": "webpack serve --open",
     "test": "mocha src/*.test.js --require esm"
   },
   "repository": {
@@ -22,7 +22,6 @@
     "esm": "^3.2.25",
     "html-webpack-plugin": "^5.3.1",
     "mocha": "^8.3.2",
-    "mocha-loader": "^5.1.5",
     "webpack": "^5.36.2",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"

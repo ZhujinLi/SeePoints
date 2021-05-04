@@ -7,11 +7,6 @@ module.exports = {
     entry: "./src/index.js",
     module: {
         rules: [
-            {
-                test: /test\.js$/,
-                use: 'mocha-loader',
-                exclude: /node_modules/,
-            },
         ],
     },
     plugins: [
