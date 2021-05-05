@@ -1,6 +1,6 @@
 
 /**
- * Find number patterns in a given text of mulitple lines.
+ * Find number patterns in a given text of multiple lines.
  * @param {string} text The full text content
  * @return {number[][]} Lines of numbers
  */
