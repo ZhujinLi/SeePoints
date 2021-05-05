@@ -7,22 +7,34 @@
 export function find_num(text) {
     let res = [];
 
-    const re = /x=((?:-?\d+)(?:\.\d+)?(?:e(?:-?\d+))?)(?:.*)y=((?:-?\d+)(?:\.\d+)?(?:e(?:-?\d+))?)/;
-
     const lines = text.split("\n");
 
     for (let iLine = 0; iLine < lines.length; iLine++) {
         const line = lines[iLine];
 
-        const match = re.exec(line);
-        if (!match || match.length < 3) {
-            continue;
+        const numbers = extract_numbers(line);
+        if (numbers.length > 0) {
+            res.push(numbers);
         }
-
-        const x = Number(match[1]);
-        const y = Number(match[2]);
-        res.push([x, y]);
     }
 
     return res;
+}
+
+/**
+ * @param {string} line 
+ */
+function extract_numbers(line) {
+    const numbers = [];
+
+    const match = line.match(/[0-9+\-\.]+/g);
+    if (match) {
+        for (const s of match) {
+            const num = parseFloat(s);
+            if (!isNaN(num)) {
+                numbers.push(num);
+            }
+        }
+    }
+    return numbers;
 }

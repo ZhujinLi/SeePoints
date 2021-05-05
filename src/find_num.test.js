@@ -12,10 +12,12 @@ describe('find_num', () => {
 `;
         const res = find_num(text);
         assert.strictEqual(res.length, 5);
-        assert.strictEqual(res[0][0], 11633721);
-        assert.strictEqual(res[0][1], 3987484);
-        assert.strictEqual(res[4][0], 11633722);
-        assert.strictEqual(res[4][1], 3987548);
+        assert.strictEqual(res[0][0], 0);
+        assert.strictEqual(res[0][1], 11633721);
+        assert.strictEqual(res[0][2], 3987484);
+        assert.strictEqual(res[4][0], 4);
+        assert.strictEqual(res[4][1], 11633722);
+        assert.strictEqual(res[4][2], 3987548);
     });
 
     it('should handle real numbers', () => {
@@ -26,8 +28,10 @@ describe('find_num', () => {
 `;
         const res = find_num(text);
         assert.strictEqual(res.length, 3);
-        assert.strictEqual(res[0][0], 452.000001);
-        assert.strictEqual(res[0][1], 11844.0004);
+        assert.strictEqual(res[0][0], 1);
+        assert.strictEqual(res[0][1], 452.000001);
+        assert.strictEqual(res[0][2], 11844.0004);
+        assert.strictEqual(res[0][3], 2);   // In 'Vector2'
     });
 
     it('should return empty array on invalid input', () => {
@@ -37,5 +41,20 @@ this log contains no number...
 `;
         const res = find_num(text);
         assert.strictEqual(res.length, 0);
+    });
+
+    it('should recognize a custom log format', () => {
+        const text = `
+(452.000001,11844.0004)
+(768.000002, 11876.0005)
+[768.000002  11876.0005
+lon:768.000002  lat:11876.0005
+`;
+        const res = find_num(text);
+        assert.strictEqual(res.length, 4);
+        assert.strictEqual(res[0].length, 2);
+        assert.strictEqual(res[1].length, 2);
+        assert.strictEqual(res[2].length, 2);
+        assert.strictEqual(res[3].length, 2);
     });
 });
