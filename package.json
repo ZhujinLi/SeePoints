@@ -1,11 +1,11 @@
 {
   "name": "seepoints",
   "version": "1.0.0",
-  "description": "",
+  "description": "A point sequence visualizer.",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "debug": "webpack serve --open",
+    "debug": "webpack-dev-server --open",
     "test": "mocha src/*.test.js --require esm"
   },
   "repository": {
@@ -18,13 +18,16 @@
     "url": "https://github.com/ZhujinLi/SeePoints/issues"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "@types/plotly.js": "1.54.1",
     "esm": "^3.2.25",
-    "html-webpack-plugin": "^5.3.1",
     "mocha": "^8.3.2",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "plotly.js": "1.54.1"
+  }
 }

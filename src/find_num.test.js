@@ -29,4 +29,13 @@ describe('find_num', () => {
         assert.strictEqual(res[0][0], 452.000001);
         assert.strictEqual(res[0][1], 11844.0004);
     });
+
+    it('should return empty array on invalid input', () => {
+        const text = `
+hello world
+this log contains no number...
+`;
+        const res = find_num(text);
+        assert.strictEqual(res.length, 0);
+    });
 });
