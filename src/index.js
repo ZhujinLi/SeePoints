@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import * as Plotly from "plotly.js";
 import * as utils from "./utils";
 
+const MAX_DISPLAY_ROWS = 8;
+
 // On every paste the data is appended 
 let plotData = [];
 
@@ -24,9 +26,19 @@ document.onpaste = (e) => {
         return;
     }
 
-    // First column is a special index
+    // Append a special index as the first column
     for (let i = 0; i < nums.length; i++) {
         nums[i] = [i].concat(nums[i]);
+    }
+
+    const nColumns = nums[0].length;
+
+    let xCol = 0;
+    let yCol = nColumns - 1;
+    const suggest = utils.suggest_axes(nums);
+    if (suggest) {
+        xCol = suggest.x;
+        yCol = suggest.y;
     }
 
     $("#config-modal").modal("show");
@@ -34,19 +46,17 @@ document.onpaste = (e) => {
     const configBody = $("#config-modal-body");
     configBody.empty();
 
-    const nColumns = nums[0].length;
-
     const table = document.createElement("table");
     table.className = "table small table-borderless";
     configBody.append(table);
 
     add_selector_row_to_table(table, nColumns, "x-selector-radio");
-    $("input[name=x-selector-radio][value=0]").prop("checked", true);
+    $("input[name=x-selector-radio][value=" + xCol + "]").prop("checked", true);
 
     fill_table_with_numbers(table, nums);
 
     add_selector_row_to_table(table, nColumns, "y-selector-radio");
-    $("input[name=y-selector-radio][value=0]").prop("checked", true);
+    $("input[name=y-selector-radio][value=" + yCol + "]").prop("checked", true);
 };
 
 document.getElementById("confirm-button").onclick = () => {
@@ -96,7 +106,7 @@ function fill_table_with_numbers(table, nums) {
     for (let i = 0; i < nums.length; i++) {
         const row = table.insertRow();
 
-        if (i > 2) {
+        if (i >= MAX_DISPLAY_ROWS) {
             for (let j = 0; j < nums[i].length; j++) {
                 row.insertCell().appendChild(document.createTextNode("..."));
             }
