@@ -2,7 +2,7 @@ import $ from "jquery";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as Plotly from "plotly.js";
-import { find_num } from "./find_num";
+import * as utils from "./utils";
 
 // On every paste the data is appended 
 let plotData = [];
@@ -18,7 +18,7 @@ let nums = [];
 
 document.onpaste = (e) => {
     const pastedText = e.clipboardData.getData("Text");
-    nums = find_num(pastedText);
+    nums = utils.find_num(pastedText);
     if (nums.length == 0 || nums[0].length == 0) {
         alert("No valid number detected...");
         return;

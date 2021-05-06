@@ -1,4 +1,4 @@
-import { find_num } from './find_num';
+import { find_num } from './utils';
 import * as assert from 'assert';
 
 describe('find_num', () => {
@@ -56,5 +56,40 @@ lon:768.000002  lat:11876.0005
         assert.strictEqual(res[1].length, 2);
         assert.strictEqual(res[2].length, 2);
         assert.strictEqual(res[3].length, 2);
+    });
+
+    it('should return empty array on invalid input', () => {
+        const text = `
+hello world
+this log contains no number...
+`;
+        const res = find_num(text);
+        assert.strictEqual(res.length, 0);
+    });
+
+    it('should choose the dominant number of columns', () => {
+        const text = `
+123 455
+124 456 789
+[warn] this line is a noise
+125 457
+126 458 789 123
+127 322
+`;
+        const res = find_num(text);
+        assert.strictEqual(res.length, 3);
+
+        assert.strictEqual(res[0].length, 2);
+        assert.strictEqual(res[0][0], 123);
+        assert.strictEqual(res[0][1], 455);
+
+        assert.strictEqual(res[1].length, 2);
+        assert.strictEqual(res[1][0], 125);
+        assert.strictEqual(res[1][1], 457);
+
+        assert.strictEqual(res[2].length, 2);
+        assert.strictEqual(res[2][0], 127);
+        assert.strictEqual(res[2][1], 322);
+
     });
 });
