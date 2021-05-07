@@ -46,17 +46,15 @@ document.onpaste = (e) => {
     const configBody = $("#config-modal-body");
     configBody.empty();
 
+    configBody.append(add_selector_row(nColumns, "x-selector", "x", xCol));
+
     const table = document.createElement("table");
-    table.className = "table small table-borderless";
+    table.className = "table small table-borderless text-center";
+    table.style.tableLayout = "fixed";
     configBody.append(table);
-
-    add_selector_row_to_table(table, nColumns, "x-selector-radio");
-    $("input[name=x-selector-radio][value=" + xCol + "]").prop("checked", true);
-
     fill_table_with_numbers(table, nums);
 
-    add_selector_row_to_table(table, nColumns, "y-selector-radio");
-    $("input[name=y-selector-radio][value=" + yCol + "]").prop("checked", true);
+    configBody.append(add_selector_row(nColumns, "y-selector", "y", yCol));
 };
 
 document.getElementById("confirm-button").onclick = () => {
@@ -64,8 +62,8 @@ document.getElementById("confirm-button").onclick = () => {
     $("#plot-div").css("display", "inline");
     $("#prompt-div").css("display", "none");
 
-    const xCol = $("input[name=x-selector-radio]:checked").val();
-    const yCol = $("input[name=y-selector-radio]:checked").val();
+    const xCol = $("input[name=x-selector]:checked").val();
+    const yCol = $("input[name=y-selector]:checked").val();
 
     const x = [], y = [];
     nums.forEach(line => x.push(line[xCol]));
@@ -83,21 +81,32 @@ document.getElementById("confirm-button").onclick = () => {
     Plotly.redraw("plot-div");
 };
 
-function add_selector_row_to_table(table, nColumns, name) {
-    const selectorRow = table.insertRow();
+function add_selector_row(nColumns, name, axis, selectedIndex) {
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "btn-group btn-group-toggle d-flex";
+    btnGroup.setAttribute("data-toggle", "buttons");
+
     for (let i = 0; i < nColumns; i++) {
-        const colForm = document.createElement("div");
-        colForm.className = "form-check";
+        const label = document.createElement("label");
+        label.innerText = axis;
+        label.className = "btn btn-outline-info";
+        if (i == selectedIndex) {
+            label.className = label.className + " active";
+        }
 
-        const colInput = document.createElement("input");
-        colInput.className = "form-check-input";
-        colInput.type = "radio";
-        colInput.name = name;
-        colInput.value = i;
-        colForm.appendChild(colInput);
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = name;
+        input.value = i;
+        if (i == selectedIndex) {
+            input.setAttribute("checked", "");
+        }
+        label.appendChild(input);
 
-        selectorRow.insertCell().appendChild(colForm);
+        btnGroup.appendChild(label);
     }
+
+    return btnGroup;
 }
 
 /**

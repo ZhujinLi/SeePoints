@@ -136,7 +136,7 @@ describe('suggest_axes', () => {
         assert.strictEqual(res.y, 1);
     });
 
-    it('should return empty for invalid inputs', () => {
+    it('should return null for invalid inputs', () => {
         assert.strictEqual(suggest_axes([]), null);
         assert.strictEqual(suggest_axes([[]]), null);
         assert.strictEqual(suggest_axes([[1]]), null);
