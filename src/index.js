@@ -2,7 +2,7 @@ import $ from "jquery";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as Plotly from "plotly.js";
-import * as utils from "./utils";
+import { find_num, suggest_axes } from "./utils";
 
 const MAX_DISPLAY_ROWS = 8;
 
@@ -20,7 +20,7 @@ let nums = [];
 
 document.onpaste = (e) => {
     const pastedText = e.clipboardData.getData("Text");
-    nums = utils.find_num(pastedText);
+    nums = find_num(pastedText);
     if (nums.length == 0 || nums[0].length == 0) {
         alert("No valid number detected...");
         return;
@@ -35,7 +35,7 @@ document.onpaste = (e) => {
 
     let xCol = 0;
     let yCol = nColumns - 1;
-    const suggest = utils.suggest_axes(nums);
+    const suggest = suggest_axes(nums);
     if (suggest) {
         xCol = suggest.x;
         yCol = suggest.y;
@@ -61,6 +61,8 @@ document.onpaste = (e) => {
 
 document.getElementById("confirm-button").onclick = () => {
     $("#config-modal").modal("hide");
+    $("#plot-div").css("display", "inline");
+    $("#prompt-div").css("display", "none");
 
     const xCol = $("input[name=x-selector-radio]:checked").val();
     const yCol = $("input[name=y-selector-radio]:checked").val();

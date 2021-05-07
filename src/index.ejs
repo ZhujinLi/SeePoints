@@ -3,10 +3,42 @@
 
 <head>
     <meta charset="utf-8" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            display: table;
+        }
+
+        #prompt-div {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #plot-div {
+            display: none;
+        }
+
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 
 <body>
     <div id="plot-div">
+    </div>
+
+    <div id="prompt-div" class="container">
+        <div class="h2">Ctrl+V to paste your log text here...</div>
+        <pre id="example-text"></pre>
     </div>
 
     <div class="modal fade" id="config-modal" role="dialog">
@@ -26,6 +58,50 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const EXAMPLES = [
+            `
+---------------------------------
+EXAMPLE
+---------------------------------
++ [12] {x=103371 y=-104951 } Point
++ [13] {x=105919 y=-105064 } Point
++ [14] {x=107266 y=-106363 } Point
++ [15] {x=108931 y=-107925 } Point
++ [16] {x=113426 y=-108410 } Point
++ [17] {x=112157 y=-110729 } Point
++ [18] {x=109005 y=-110044 } Point`,
+
+            `
+-----------------
+EXAMPLE
+-----------------
+(103371, -104951),
+(105919, -105064),
+(107266, -106363),
+(108931, -107925),
+(113426, -108410),
+(112157, -110729),
+(109005, -110044),`,
+
+            `
+---------------------------------------------------
+EXAMPLE
+---------------------------------------------------
+src\\main.cpp(466): tick(1065) einfo:103371 -104951
+src\\main.cpp(466): tick(1071) einfo:105919 -105064
+src\\main.cpp(466): tick(1076) einfo:107266 -106363
+src\\main.cpp(466): tick(1083) einfo:108931 -107925
+src\\main.cpp(466): tick(1088) einfo:113426 -108410
+src\\main.cpp(466): tick(1094) einfo:112157 -110729
+src\\main.cpp(466): tick(1100) einfo:109005 -110044`,
+        ];
+
+        const n = EXAMPLES.length;
+        const i = Math.floor(Math.random() * n);
+        document.getElementById("example-text").innerText = EXAMPLES[i];
+    </script>
 </body>
 
 </html>
