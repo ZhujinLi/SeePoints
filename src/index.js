@@ -89,7 +89,7 @@ function add_selector_row(nColumns, name, axis, selectedIndex) {
     for (let i = 0; i < nColumns; i++) {
         const label = document.createElement("label");
         label.innerText = axis;
-        label.className = "btn btn-outline-info";
+        label.className = axis == "x" ? "btn btn-outline-danger" : "btn btn-outline-info";
         if (i == selectedIndex) {
             label.className = label.className + " active";
         }
