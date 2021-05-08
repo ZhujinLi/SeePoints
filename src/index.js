@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import * as Plotly from "plotly.js";
 import { find_num, suggest_axes } from "./utils";
 
-const MAX_DISPLAY_ROWS = 8;
+const MAX_DISPLAY_ROWS = 5;
 
 let axesRatioMode = "fixed";
 
@@ -146,11 +146,12 @@ function fill_table_with_numbers(table, nums) {
     for (let i = 0; i < nums.length; i++) {
         const row = table.insertRow();
 
-        if (i >= MAX_DISPLAY_ROWS) {
+        if (i >= MAX_DISPLAY_ROWS && i + 1 < nums.length) {
             for (let j = 0; j < nums[i].length; j++) {
                 row.insertCell().appendChild(document.createTextNode("..."));
             }
-            break;
+            i = nums.length - 2;
+            continue;
         }
 
         const id = document.createElement("b");
