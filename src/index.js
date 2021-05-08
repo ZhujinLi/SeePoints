@@ -6,14 +6,43 @@ import { find_num, suggest_axes } from "./utils";
 
 const MAX_DISPLAY_ROWS = 8;
 
-// On every paste the data is appended 
+let axesRatioMode = "fixed";
+
+/**
+ * Holds the data to be appended after each paste
+ * @type {Plotly.Data[]}
+ */
 let plotData = [];
 
 Plotly.newPlot(
     "plot-div",
     plotData,
-    { yaxis: { scaleanchor: "x" } },
-    { responsive: true, fillFrame: true },
+    makeLayout(),
+    {
+        responsive: true,
+        fillFrame: true,
+        scrollZoom: true,   // Note this does not work on some browsers like Safari
+        modeBarButtonsToRemove: [
+            "select2d",
+            "zoomIn2d",
+            "zoomOut2d",
+            "lasso2d",
+            "resetScale2d",
+            "toggleSpikelines",
+            "hoverCompareCartesian",
+            "hoverClosestCartesian",
+        ],
+        modeBarButtonsToAdd: [
+            {
+                name: 'Switch axes ratio mode',
+                icon: Plotly.Icons["tooltip_basic"],
+                click: (gd) => {
+                    axesRatioMode = axesRatioMode == "fixed" ? "auto" : "fixed";
+                    Plotly.relayout(gd, makeLayout());
+                }
+            },
+        ]
+    },
 );
 
 let nums = [];
@@ -132,4 +161,16 @@ function fill_table_with_numbers(table, nums) {
             row.insertCell().appendChild(document.createTextNode(nums[i][j]));
         }
     }
+}
+
+/**
+ * @return {Plotly.Layout}
+ */
+function makeLayout() {
+    return {
+        hovermode: "closest",
+        yaxis: {
+            scaleanchor: axesRatioMode == "fixed" ? "x" : "y",
+        },
+    };
 }
