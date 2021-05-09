@@ -42,7 +42,7 @@ Plotly.newPlot(
                     Plotly.relayout(gd, makeLayout());
                 }
             },
-        ]
+        ],
     },
 );
 
@@ -90,7 +90,6 @@ document.onpaste = (e) => {
 document.getElementById("confirm-button").onclick = () => {
     $("#config-modal").modal("hide");
     $("#plot-div").css("display", "inline");
-    $("#prompt-div").css("display", "none");
 
     const xCol = $("input[name=x-selector]:checked").val();
     const yCol = $("input[name=y-selector]:checked").val();
@@ -174,5 +173,6 @@ function makeLayout() {
         yaxis: {
             scaleanchor: axesRatioMode == "fixed" ? "x" : "y",
         },
+        dragmode: "pan",
     };
 }
