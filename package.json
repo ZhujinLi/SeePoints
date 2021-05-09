@@ -4,8 +4,8 @@
   "description": "A point sequence visualizer.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "debug": "webpack-dev-server --open",
+    "build": "webpack --mode=production --no-devtool",
+    "debug": "webpack-dev-server --open --mode=development",
     "test": "mocha src/*.test.js --require esm"
   },
   "repository": {
@@ -33,7 +33,7 @@
   "dependencies": {
     "bootstrap": "^4.6.0",
     "jquery": "^3.6.0",
-    "plotly.js": "1.54.1",
+    "plotly.js-basic-dist-min": "^1.58.4",
     "popper.js": "^1.16.1"
   }
 }

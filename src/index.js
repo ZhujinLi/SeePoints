@@ -1,7 +1,7 @@
 import $ from "jquery";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import * as Plotly from "plotly.js";
+import Plotly from "plotly.js-basic-dist-min";
 import { find_num, gen_labels, suggest_axes } from "./utils";
 
 const MAX_DISPLAY_ROWS = 5;
