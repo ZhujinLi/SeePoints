@@ -31,11 +31,12 @@ Plotly.newPlot(
             "toggleSpikelines",
             "hoverCompareCartesian",
             "hoverClosestCartesian",
+            "autoScale2d",
         ],
         modeBarButtonsToAdd: [
             {
                 name: 'Switch axes ratio mode',
-                icon: Plotly.Icons["tooltip_basic"],
+                icon: Plotly.Icons["autoscale"],
                 click: (gd) => {
                     axesRatioMode = axesRatioMode == "fixed" ? "auto" : "fixed";
                     Plotly.relayout(gd, makeLayout());
