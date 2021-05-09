@@ -1,3 +1,3 @@
 # SeePoints
 
-A utility to visualize data points in log text.
+A utility for visualizing data points in log text.
