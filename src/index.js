@@ -2,7 +2,7 @@ import $ from "jquery";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as Plotly from "plotly.js";
-import { find_num, suggest_axes } from "./utils";
+import { find_num, gen_labels, suggest_axes } from "./utils";
 
 const MAX_DISPLAY_ROWS = 5;
 
@@ -12,7 +12,7 @@ let axesRatioMode = "fixed";
  * Holds the data to be appended after each paste
  * @type {Plotly.Data[]}
  */
-let plotData = [];
+const plotData = [];
 
 Plotly.newPlot(
     "plot-div",
@@ -101,10 +101,10 @@ document.getElementById("confirm-button").onclick = () => {
     plotData.push({
         x: x,
         y: y,
-        text: [...Array(x.length).keys()],
+        text: gen_labels(x, y),
         mode: "text+lines+markers",
         textinfo: "label",
-        textposition: "bottom right",
+        textposition: "top center",
     });
 
     Plotly.redraw("plot-div");

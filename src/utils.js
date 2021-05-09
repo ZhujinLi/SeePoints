@@ -60,6 +60,37 @@ export function suggest_axes(nums) {
 }
 
 /**
+ * Generate labels (indexes starting with 0) for each point.
+ * If a point occurs multiple times, each of its occurance's label would be an array
+ * of the indexes of all occurances.
+ * @param {number[]} x 
+ * @param {number[]} y Must be of the same length as x
+ * @return {string[]}
+ */
+export function gen_labels(x, y) {
+    function make_key(xi, yi) {
+        return xi + " " + yi;
+    }
+
+    const map = {};
+    for (let i = 0; i < x.length; i++) {
+        const key = make_key(x[i], y[i]);
+        if (map[key] === undefined) {
+            map[key] = i;
+        } else {
+            map[key] = map[key] + "," + i;
+        }
+    }
+
+    const labels = [];
+    for (let i = 0; i < x.length; i++) {
+        const key = make_key(x[i], y[i]);
+        labels.push(map[key]);
+    }
+    return labels;
+}
+
+/**
  * How chaos is a column of numbers?
  * @param {number[][]} nums 
  */
@@ -120,5 +151,4 @@ function filter_nums(nums) {
     }
 
     return nums.filter(line => line.length == maxOne);
-
 }

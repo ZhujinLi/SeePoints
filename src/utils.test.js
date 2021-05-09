@@ -1,4 +1,4 @@
-import { find_num, suggest_axes } from './utils';
+import { find_num, suggest_axes, gen_labels } from './utils';
 import * as assert from 'assert';
 
 describe('find_num', () => {
@@ -11,13 +11,13 @@ describe('find_num', () => {
 +		[4]	{x=11633722 y=3987548 }	NdsPoint
 `;
         const res = find_num(text);
-        assert.strictEqual(res.length, 5);
-        assert.strictEqual(res[0][0], 0);
-        assert.strictEqual(res[0][1], 11633721);
-        assert.strictEqual(res[0][2], 3987484);
-        assert.strictEqual(res[4][0], 4);
-        assert.strictEqual(res[4][1], 11633722);
-        assert.strictEqual(res[4][2], 3987548);
+        assert.deepStrictEqual(res, [
+            [0, 11633721, 3987484],
+            [1, 11633722, 3987491],
+            [2, 11633725, 3987525],
+            [3, 11633724, 3987528],
+            [4, 11633722, 3987548],
+        ]);
     });
 
     it('should handle real numbers', () => {
@@ -27,11 +27,11 @@ describe('find_num', () => {
 +		[3]	{x=4832.00003 y=11888.0006 }	const Vector2
 `;
         const res = find_num(text);
-        assert.strictEqual(res.length, 3);
-        assert.strictEqual(res[0][0], 1);
-        assert.strictEqual(res[0][1], 452.000001);
-        assert.strictEqual(res[0][2], 11844.0004);
-        assert.strictEqual(res[0][3], 2);   // In 'Vector2'
+        assert.deepStrictEqual(res, [
+            [1, 452.000001, 11844.0004, 2],
+            [2, 768.000002, 11876.0005, 2],
+            [3, 4832.00003, 11888.0006, 2],
+        ]);
     });
 
     it('should return empty array on invalid input', () => {
@@ -51,11 +51,12 @@ this log contains no number...
 lon:768.000002  lat:11876.0005
 `;
         const res = find_num(text);
-        assert.strictEqual(res.length, 4);
-        assert.strictEqual(res[0].length, 2);
-        assert.strictEqual(res[1].length, 2);
-        assert.strictEqual(res[2].length, 2);
-        assert.strictEqual(res[3].length, 2);
+        assert.deepStrictEqual(res, [
+            [452.000001, 11844.0004],
+            [768.000002, 11876.0005],
+            [768.000002, 11876.0005],
+            [768.000002, 11876.0005],
+        ]);
     });
 
     it('should return empty array on invalid input', () => {
@@ -77,20 +78,7 @@ this log contains no number...
 127 322
 `;
         const res = find_num(text);
-        assert.strictEqual(res.length, 3);
-
-        assert.strictEqual(res[0].length, 2);
-        assert.strictEqual(res[0][0], 123);
-        assert.strictEqual(res[0][1], 455);
-
-        assert.strictEqual(res[1].length, 2);
-        assert.strictEqual(res[1][0], 125);
-        assert.strictEqual(res[1][1], 457);
-
-        assert.strictEqual(res[2].length, 2);
-        assert.strictEqual(res[2][0], 127);
-        assert.strictEqual(res[2][1], 322);
-
+        assert.deepStrictEqual(res, [[123, 455], [125, 457], [127, 322]]);
     });
 
     it('should handle single number', () => {
@@ -99,13 +87,7 @@ this log contains no number...
 456
 `;
         const res = find_num(text);
-        assert.strictEqual(res.length, 2);
-
-        assert.strictEqual(res[0].length, 1);
-        assert.strictEqual(res[0][0], 123);
-
-        assert.strictEqual(res[1].length, 1);
-        assert.strictEqual(res[1][0], 456);
+        assert.deepStrictEqual(res, [[123], [456]]);
     });
 });
 
@@ -119,8 +101,7 @@ describe('suggest_axes', () => {
             [4, 11633722, 3987548, 3],
         ];
         const res = suggest_axes(nums);
-        assert.strictEqual(res.x, 1);
-        assert.strictEqual(res.y, 2);
+        assert.deepStrictEqual(res, { x: 1, y: 2 });
     });
 
     it('should handle two columns', () => {
@@ -132,8 +113,7 @@ describe('suggest_axes', () => {
             [11633722, 3987548],
         ];
         const res = suggest_axes(nums);
-        assert.strictEqual(res.x, 0);
-        assert.strictEqual(res.y, 1);
+        assert.deepStrictEqual(res, { x: 0, y: 1 });
     });
 
     it('should return null for invalid inputs', () => {
@@ -143,5 +123,23 @@ describe('suggest_axes', () => {
         assert.strictEqual(suggest_axes([[1], [2]]), null);
         assert.strictEqual(suggest_axes([[1, 2]]), null);
         assert.strictEqual(suggest_axes([[9], [3], [1], [4], [8]]), null);
+    });
+});
+
+describe('gen_labels', () => {
+    it('should handle regular case', () => {
+        const x = [1, 2, 3, 4, 5];
+        const y = [6, 7, 8, 9, 0];
+
+        const labels = gen_labels(x, y);
+        assert.deepStrictEqual(labels, [0, 1, 2, 3, 4]);
+    });
+
+    it('should handle duplicates', () => {
+        const x = [1, 2, 1, 1, 5];
+        const y = [6, 7, 8, 6, 0];
+
+        const labels = gen_labels(x, y);
+        assert.deepStrictEqual(labels, ["0,3", 1, 2, "0,3", 4]);
     });
 });
