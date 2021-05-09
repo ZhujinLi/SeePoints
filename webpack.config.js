@@ -17,7 +17,6 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: "SeePoints",
             template: "./src/index.ejs",
         }),
         new CleanWebpackPlugin(),

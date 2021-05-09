@@ -2,12 +2,12 @@ import "./index.css";
 import $ from "jquery";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Plotly from "plotly.js-basic-dist-min";
+import Plotly from "plotly.js";
 import { find_num, gen_labels, suggest_axes } from "./utils";
 
 const MAX_DISPLAY_ROWS = 5;
 
-let axesRatioMode = "fixed";
+let fixedAxesRatio = true;
 
 /**
  * Holds the data to be appended after each paste
@@ -18,7 +18,14 @@ const plotData = [];
 Plotly.newPlot(
     "plot-div",
     plotData,
-    makeLayout(),
+    {
+        hovermode: "closest",
+        yaxis: {
+            scaleanchor: "x",
+            scaleratio: 1,
+        },
+        dragmode: "pan",
+    },
     {
         responsive: true,
         fillFrame: true,
@@ -39,8 +46,21 @@ Plotly.newPlot(
                 name: 'Switch axes ratio mode',
                 icon: Plotly.Icons["autoscale"],
                 click: (gd) => {
-                    axesRatioMode = axesRatioMode == "fixed" ? "auto" : "fixed";
-                    Plotly.relayout(gd, makeLayout());
+                    fixedAxesRatio = !fixedAxesRatio;
+
+                    // 'autorange' is needed or there could be error in Plotly when adjusting axes ratio
+                    Plotly.relayout(gd, {
+                        yaxis: fixedAxesRatio ? {
+                            scaleanchor: "x",
+                            scaleratio: 1,
+                            autorange: true,
+                        } : {
+                            autorange: true,
+                        },
+                        xaxis: {
+                            autorange: true,
+                        }
+                    });
                 }
             },
         ],
@@ -163,17 +183,4 @@ function fill_table_with_numbers(table, nums) {
             row.insertCell().appendChild(document.createTextNode(nums[i][j]));
         }
     }
-}
-
-/**
- * @return {Plotly.Layout}
- */
-function makeLayout() {
-    return {
-        hovermode: "closest",
-        yaxis: {
-            scaleanchor: axesRatioMode == "fixed" ? "x" : "y",
-        },
-        dragmode: "pan",
-    };
 }
