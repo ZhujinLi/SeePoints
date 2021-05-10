@@ -20,10 +20,6 @@ Plotly.newPlot(
     plotData,
     {
         hovermode: "closest",
-        yaxis: {
-            scaleanchor: "x",
-            scaleratio: 1,
-        },
         dragmode: "pan",
     },
     {
@@ -43,24 +39,11 @@ Plotly.newPlot(
         ],
         modeBarButtonsToAdd: [
             {
-                name: 'Switch axes ratio mode',
+                name: "Switch axes ratio mode",
                 icon: Plotly.Icons["autoscale"],
-                click: (gd) => {
+                click: () => {
                     fixedAxesRatio = !fixedAxesRatio;
-
-                    // 'autorange' is needed or there could be error in Plotly when adjusting axes ratio
-                    Plotly.relayout(gd, {
-                        yaxis: fixedAxesRatio ? {
-                            scaleanchor: "x",
-                            scaleratio: 1,
-                            autorange: true,
-                        } : {
-                            autorange: true,
-                        },
-                        xaxis: {
-                            autorange: true,
-                        }
-                    });
+                    relayout();
                 }
             },
         ],
@@ -94,28 +77,28 @@ document.onpaste = (e) => {
 
     $("#config-modal").modal("show");
 
-    const configBody = $("#config-modal-body");
-    configBody.empty();
+    const configBody = document.getElementById("config-modal-body");
+    configBody.innerHTML = "";
 
-    configBody.append(add_selector_row(nColumns, "x-selector", "x", xCol));
+    configBody.appendChild(add_selector_row(nColumns, "x-selector", "x", xCol));
 
     const table = document.createElement("table");
     table.className = "table small table-borderless text-center";
     table.style.tableLayout = "fixed";
-    configBody.append(table);
+    configBody.appendChild(table);
     fill_table_with_numbers(table, nums);
 
-    configBody.append(add_selector_row(nColumns, "y-selector", "y", yCol));
+    configBody.appendChild(add_selector_row(nColumns, "y-selector", "y", yCol));
 };
 
 document.getElementById("confirm-button").onclick = () => {
     $("#config-modal").modal("hide");
-    $("#plot-div").css("display", "inline");
-    $("#prompt-div").css("display", "none");
-    $(".github-corner").css("display", "none");
+    document.getElementById("prompt-div").style.display = "none";
+    document.getElementById("github-corner").style.display = "none";
+    document.getElementById("plot-div").style.display = "inline";
 
-    const xCol = $("input[name=x-selector]:checked").val();
-    const yCol = $("input[name=y-selector]:checked").val();
+    const xCol = document.querySelector("input[name=x-selector]:checked").value;
+    const yCol = document.querySelector("input[name=y-selector]:checked").value;
 
     const x = [], y = [];
     nums.forEach(line => x.push(line[xCol]));
@@ -130,6 +113,7 @@ document.getElementById("confirm-button").onclick = () => {
         textposition: "top center",
     });
 
+    relayout();
     Plotly.redraw("plot-div");
 };
 
@@ -185,4 +169,20 @@ function fill_table_with_numbers(table, nums) {
             row.insertCell().appendChild(document.createTextNode(nums[i][j]));
         }
     }
+}
+
+function relayout() {
+    // "autorange" is needed or there could be error in Plotly when adjusting axes ratio
+    Plotly.relayout("plot-div", {
+        yaxis: fixedAxesRatio ? {
+            scaleanchor: "x",
+            scaleratio: 1,
+            autorange: true,
+        } : {
+            autorange: true,
+        },
+        xaxis: {
+            autorange: true,
+        }
+    });
 }
