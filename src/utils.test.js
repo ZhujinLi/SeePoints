@@ -89,6 +89,18 @@ this log contains no number...
         const res = find_num(text);
         assert.deepStrictEqual(res, [[123], [456]]);
     });
+
+    it('should handle exp representation', () => {
+        const text = `
+        +		[0]	{x=-1.39876443e-06 y=32.0000000 }	Vector2
+        +		[1]	{x=-27.7128124 y=16.0000019 }	Vector2
+`;
+        const res = find_num(text);
+        assert.deepStrictEqual(res, [
+            [0, -0.00000139876443, 32, 2],
+            [1, -27.7128124, 16.0000019, 2]
+        ]);
+    });
 });
 
 describe('suggest_axes', () => {

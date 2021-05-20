@@ -116,7 +116,7 @@ function calc_entropy_of_column(nums, iCol) {
 function extract_numbers_in_line(line) {
     const numbers = [];
 
-    const match = line.match(/[0-9+\-.]+/g);
+    const match = line.match(/[0-9+\-.e]+/g);
     if (match) {
         for (const s of match) {
             const num = parseFloat(s);
