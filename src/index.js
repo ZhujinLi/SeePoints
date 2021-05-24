@@ -75,6 +75,17 @@ document.onpaste = (e) => {
         yCol = suggest.y;
     }
 
+    // Use large size if the line is too long
+    if (nColumns > 8) {
+        document.getElementById("config-modal-dialog").classList.remove("modal-lg");
+        document.getElementById("config-modal-dialog").classList.add("mw-100");
+        document.getElementById("config-modal-dialog").classList.add("w-100");
+    } else {
+        document.getElementById("config-modal-dialog").classList.remove("mw-100");
+        document.getElementById("config-modal-dialog").classList.remove("w-100");
+        document.getElementById("config-modal-dialog").classList.add("modal-lg");
+    }
+
     $("#config-modal").modal("show");
 
     const configBody = document.getElementById("config-modal-body");
