@@ -8,6 +8,7 @@ import { find_num, gen_labels, suggest_axes } from "./utils";
 const MAX_DISPLAY_ROWS = 5;
 
 let fixedAxesRatio = true;
+let showLabels = true;
 
 /**
  * Holds the data to be appended after each paste
@@ -39,11 +40,19 @@ Plotly.newPlot(
         ],
         modeBarButtonsToAdd: [
             {
-                name: "Switch axes ratio mode",
+                name: "Toggle axes ratio mode",
                 icon: Plotly.Icons["autoscale"],
                 click: () => {
                     fixedAxesRatio = !fixedAxesRatio;
                     relayout();
+                }
+            },
+            {
+                name: "Toggle label display",
+                icon: Plotly.Icons["question"],
+                click: () => {
+                    showLabels = !showLabels;
+                    updateLabelDisplay();
                 }
             },
         ],
@@ -119,12 +128,12 @@ document.getElementById("confirm-button").onclick = () => {
         x: x,
         y: y,
         text: gen_labels(x, y),
-        mode: "text+lines+markers",
         textinfo: "label",
         textposition: "top center",
     });
 
     relayout();
+    updateLabelDisplay();
     Plotly.redraw("plot-div");
 };
 
@@ -196,4 +205,9 @@ function relayout() {
             autorange: true,
         }
     });
+}
+
+function updateLabelDisplay() {
+    plotData.forEach(dat => dat.mode = showLabels ? "text+lines+markers" : "lines+markers");
+    Plotly.redraw("plot-div");
 }
