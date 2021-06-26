@@ -3,7 +3,7 @@ import $ from "jquery";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Plotly from "plotly.js";
-import { find_num, gen_labels, suggest_axes } from "./utils";
+import { find_num, gen_labels, suggest_axes, split_log_by_empty_lines } from "./utils";
 
 const MAX_DISPLAY_ROWS = 5;
 
@@ -15,6 +15,12 @@ let showLabels = true;
  * @type {Plotly.Data[]}
  */
 const plotData = [];
+
+/* Multiple sections separated by empty lines are supported. In such cases,
+ * the modal window would show up multiple times. A new window can only show
+ * up after previous one has committed, so we need this queue for sync.
+ */
+let textSections = [];
 
 Plotly.newPlot(
     "plot-div",
@@ -52,7 +58,7 @@ Plotly.newPlot(
                 icon: Plotly.Icons["question"],
                 click: () => {
                     showLabels = !showLabels;
-                    updateLabelDisplay();
+                    update_label_display();
                 }
             },
         ],
@@ -63,7 +69,15 @@ let nums = [];
 
 document.onpaste = (e) => {
     const pastedText = e.clipboardData.getData("Text");
-    nums = find_num(pastedText);
+    textSections = split_log_by_empty_lines(pastedText);
+    process_next_text_section();
+}
+
+/**
+ * @param {string} text 
+ */
+function add_new_data(text) {
+    nums = find_num(text);
     if (nums.length == 0 || nums[0].length == 0) {
         alert("No valid number detected...");
         return;
@@ -109,10 +123,12 @@ document.onpaste = (e) => {
     fill_table_with_numbers(table, nums);
 
     configBody.appendChild(add_selector_row(nColumns, "y-selector", "y", yCol));
-};
+}
 
 document.getElementById("confirm-button").onclick = () => {
-    $("#config-modal").modal("hide");
+    if (textSections.length == 0)
+        $("#config-modal").modal("hide");
+
     document.getElementById("prompt-div").style.display = "none";
     document.getElementById("github-corner").style.display = "none";
     document.getElementById("plot-div").style.display = "inline";
@@ -133,8 +149,10 @@ document.getElementById("confirm-button").onclick = () => {
     });
 
     relayout();
-    updateLabelDisplay();
+    update_label_display();
     Plotly.redraw("plot-div");
+
+    process_next_text_section();
 };
 
 function add_selector_row(nColumns, name, axis, selectedIndex) {
@@ -207,7 +225,14 @@ function relayout() {
     });
 }
 
-function updateLabelDisplay() {
+function update_label_display() {
     plotData.forEach(dat => dat.mode = showLabels ? "text+lines+markers" : "lines+markers");
     Plotly.redraw("plot-div");
+}
+
+function process_next_text_section() {
+    const section = textSections.shift();
+    if (section != undefined) {
+        add_new_data(section);
+    }
 }

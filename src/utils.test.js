@@ -1,4 +1,4 @@
-import { find_num, suggest_axes, gen_labels } from './utils';
+import { find_num, suggest_axes, gen_labels, split_log_by_empty_lines } from './utils';
 import * as assert from 'assert';
 
 describe('find_num', () => {
@@ -153,5 +153,49 @@ describe('gen_labels', () => {
 
         const labels = gen_labels(x, y);
         assert.deepStrictEqual(labels, ["0,3", 1, 2, "0,3", 4]);
+    });
+});
+
+describe('split_log_by_empty_lines', () => {
+    it('should handle typical case', () => {
+        const result = split_log_by_empty_lines(`123 456
+xxx xxx
+
+yyy yyy`);
+        assert.deepStrictEqual(result, [`123 456
+xxx xxx`, 'yyy yyy']);
+    });
+
+    it('should handle two empty lines', () => {
+        const result = split_log_by_empty_lines(`123 456
+xxx xxx
+
+
+yyy yyy`);
+        assert.deepStrictEqual(result, [`123 456
+xxx xxx`, 'yyy yyy']);
+    });
+
+    it('should treat spaces as empty', () => {
+        const result = split_log_by_empty_lines(`123 456
+xxx xxx
+         
+\t\t
+yyy yyy`);
+        assert.deepStrictEqual(result, [`123 456
+xxx xxx`, 'yyy yyy']);
+    });
+
+    it('should handle empty lines at start or end', () => {
+        const result = split_log_by_empty_lines(`
+
+123 456
+xxx xxx
+
+yyy yyy
+
+`);
+        assert.deepStrictEqual(result, [`123 456
+xxx xxx`, 'yyy yyy']);
     });
 });

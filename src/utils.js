@@ -91,6 +91,15 @@ export function gen_labels(x, y) {
 }
 
 /**
+ * @param {string} text 
+ */
+export function split_log_by_empty_lines(text) {
+    let splitted = text.split(/\n\s*\n/);
+    splitted = splitted.filter(s => s.length > 0);
+    return splitted;
+}
+
+/**
  * How chaos is a column of numbers?
  * @param {number[][]} nums 
  */
