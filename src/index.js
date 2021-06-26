@@ -79,7 +79,7 @@ document.onpaste = (e) => {
 function add_new_data(text) {
     nums = find_num(text);
     if (nums.length == 0 || nums[0].length == 0) {
-        alert("No valid number detected...");
+        process_next_text_section();
         return;
     }
 
